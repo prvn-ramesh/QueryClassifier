@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Ultra-fast, lightweight ONNX query difficulty classifier for pre-routing LLM cascades"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "MIT" }
+license = "MIT"
 authors = [
     { name = "Praveen Ramesh" }
 ]
@@ -23,7 +23,6 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
-
 dependencies = [
     "onnxruntime>=1.17.0",
     "tokenizers>=0.19.0",
@@ -32,9 +31,17 @@ dependencies = [
     "python-dotenv>=1.0.0",
 ]
 
+[project.urls]
+Homepage = "https://github.com/prvn-ramesh/QueryClassifier"
+Repository = "https://github.com/prvn-ramesh/QueryClassifier"
+"Model Hub" = "https://huggingface.co/prvn-ramesh/query-classifier-onnx"
+"Bug Tracker" = "https://github.com/prvn-ramesh/QueryClassifier/issues"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
+    "build>=1.0.0",
+    "twine>=5.0.0",
 ]
 
 [project.scripts]
