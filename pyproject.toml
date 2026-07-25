@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "queryclf"
-version = "0.1.1"
+version = "0.1.2"
 description = "Ultra-fast, lightweight ONNX query difficulty classifier for pre-routing LLM cascades"
 readme = "README.md"
 requires-python = ">=3.9"

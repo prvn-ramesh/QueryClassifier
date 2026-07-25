@@ -9,13 +9,20 @@ import numpy as np
 import onnxruntime as ort
 from tokenizers import Tokenizer
 from dotenv import load_dotenv
-from huggingface_hub import hf_hub_download
+from huggingface_hub import hf_hub_download, try_to_load_from_cache
 
 # Load environment variables automatically if .env exists
 load_dotenv()
 
 DEFAULT_HF_REPO = "prvn-ramesh/query-classifier-onnx"
 DEFAULT_ID2LABEL = {"0": "low", "1": "medium", "2": "hard"}
+
+
+def _get_hf_file(repo_id: str, filename: str) -> Path:
+    cached = try_to_load_from_cache(repo_id=repo_id, filename=filename)
+    if cached is None or isinstance(cached, Exception):
+        print(f"Downloading model artifact '{filename}' from Hugging Face Hub ('{repo_id}')...", file=sys.stderr, flush=True)
+    return Path(hf_hub_download(repo_id=repo_id, filename=filename))
 
 
 def resolve_model_files(
@@ -35,10 +42,9 @@ def resolve_model_files(
 
     if repo and repo.strip():
         repo_id = repo.strip()
-        print(f"Downloading model artifacts from Hugging Face Hub ('{repo_id}')...", file=sys.stderr, flush=True)
-        model_file = Path(hf_hub_download(repo_id=repo_id, filename="model.onnx"))
-        tok_file = Path(hf_hub_download(repo_id=repo_id, filename="tokenizer.json"))
-        cfg_file = Path(hf_hub_download(repo_id=repo_id, filename="config.json"))
+        model_file = _get_hf_file(repo_id, "model.onnx")
+        tok_file = _get_hf_file(repo_id, "tokenizer.json")
+        cfg_file = _get_hf_file(repo_id, "config.json")
         return model_file, tok_file, cfg_file
 
     if local_dir and str(local_dir).strip():
@@ -59,10 +65,9 @@ def resolve_model_files(
 
     # Default fallback: Hugging Face hub repository
     repo_id = DEFAULT_HF_REPO
-    print(f"Downloading model artifacts from Hugging Face Hub ('{repo_id}')...", file=sys.stderr, flush=True)
-    model_file = Path(hf_hub_download(repo_id=repo_id, filename="model.onnx"))
-    tok_file = Path(hf_hub_download(repo_id=repo_id, filename="tokenizer.json"))
-    cfg_file = Path(hf_hub_download(repo_id=repo_id, filename="config.json"))
+    model_file = _get_hf_file(repo_id, "model.onnx")
+    tok_file = _get_hf_file(repo_id, "tokenizer.json")
+    cfg_file = _get_hf_file(repo_id, "config.json")
     return model_file, tok_file, cfg_file
 
 

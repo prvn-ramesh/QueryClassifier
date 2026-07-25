@@ -4,5 +4,5 @@ QueryClassifier: Ultra-fast ONNX query difficulty classifier for pre-routing in 
 
 from query_classifier.classifier import QueryClassifier, PredictionResult
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __all__ = ["QueryClassifier", "PredictionResult", "__version__"]
