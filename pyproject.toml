@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "query-classifier"
+name = "queryclf"
 version = "0.1.0"
 description = "Ultra-fast, lightweight ONNX query difficulty classifier for pre-routing LLM cascades"
 readme = "README.md"
@@ -45,6 +45,7 @@ dev = [
 ]
 
 [project.scripts]
+queryclf = "query_classifier.cli:main"
 query-classifier = "query_classifier.cli:main"
 
 [tool.setuptools.packages.find]

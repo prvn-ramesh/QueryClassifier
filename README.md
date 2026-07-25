@@ -11,7 +11,7 @@
 ### Installation
 
 ```bash
-pip install -e .
+pip install queryclf
 ```
 
 Dependencies installed are lightweight (~38MB total): `onnxruntime`, `tokenizers`, `numpy`, `huggingface-hub`, and `python-dotenv`.
@@ -87,13 +87,13 @@ classifier.clear_cache()
 
 ```bash
 # Single query classification
-query-classifier "What is 2 + 2?"
+queryclf "What is 2 + 2?"
 
 # JSON output mode
-query-classifier "Write a Rust lock-free SPMC queue" --json
+queryclf "Write a Rust lock-free SPMC queue" --json
 
 # Batch mode from file
-query-classifier --file queries.txt
+queryclf --file queries.txt
 ```
 
 ---
