@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import time
 from pathlib import Path
@@ -34,6 +35,7 @@ def resolve_model_files(
 
     if repo and repo.strip():
         repo_id = repo.strip()
+        print(f"Downloading model artifacts from Hugging Face Hub ('{repo_id}')...", file=sys.stderr, flush=True)
         model_file = Path(hf_hub_download(repo_id=repo_id, filename="model.onnx"))
         tok_file = Path(hf_hub_download(repo_id=repo_id, filename="tokenizer.json"))
         cfg_file = Path(hf_hub_download(repo_id=repo_id, filename="config.json"))
@@ -57,6 +59,7 @@ def resolve_model_files(
 
     # Default fallback: Hugging Face hub repository
     repo_id = DEFAULT_HF_REPO
+    print(f"Downloading model artifacts from Hugging Face Hub ('{repo_id}')...", file=sys.stderr, flush=True)
     model_file = Path(hf_hub_download(repo_id=repo_id, filename="model.onnx"))
     tok_file = Path(hf_hub_download(repo_id=repo_id, filename="tokenizer.json"))
     cfg_file = Path(hf_hub_download(repo_id=repo_id, filename="config.json"))
@@ -76,14 +79,20 @@ class ONNXClassifierEngine:
         providers: Optional[List[str]] = None,
         intra_op_num_threads: Optional[int] = None,
         inter_op_num_threads: Optional[int] = None,
+        max_length: Optional[int] = 512,
     ):
         model_file, tok_file, cfg_file = resolve_model_files(model_path=model_path, hf_repo=hf_repo)
 
         self.tokenizer = Tokenizer.from_file(str(tok_file))
+        if max_length is not None and max_length > 0:
+            self.tokenizer.enable_truncation(max_length=max_length)
 
         providers = providers or ["CPUExecutionProvider"]
         
         opts = ort.SessionOptions()
+        opts.graph_optimization_level = ort.GraphOptimizationLevel.ORT_ENABLE_ALL
+        opts.log_severity_level = 3  # Suppress ONNX runtime warnings
+
         if intra_op_num_threads is not None and intra_op_num_threads > 0:
             opts.intra_op_num_threads = intra_op_num_threads
         if inter_op_num_threads is not None and inter_op_num_threads > 0:

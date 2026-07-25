@@ -40,6 +40,7 @@ class QueryClassifier:
         cache_size: Optional[int] = 1000,
         intra_op_num_threads: Optional[int] = None,
         inter_op_num_threads: Optional[int] = None,
+        max_length: Optional[int] = 512,
     ):
         """
         Initialize the QueryClassifier engine.
@@ -51,6 +52,7 @@ class QueryClassifier:
             cache_size: Max entries for LRU query cache (set to 0 or None to disable caching).
             intra_op_num_threads: Number of threads used to parallelize execution within nodes.
             inter_op_num_threads: Number of threads used to parallelize execution of different nodes.
+            max_length: Maximum sequence length for input token truncation (default: 512).
         """
         self.engine = ONNXClassifierEngine(
             model_path=model_path,
@@ -58,6 +60,7 @@ class QueryClassifier:
             providers=providers,
             intra_op_num_threads=intra_op_num_threads,
             inter_op_num_threads=inter_op_num_threads,
+            max_length=max_length,
         )
 
         self.cache_size = cache_size if (cache_size is not None and cache_size > 0) else 0
@@ -83,10 +86,11 @@ class QueryClassifier:
     def _get_from_cache(self, text: str) -> Optional[PredictionResult]:
         if not self.cache_size:
             return None
-        if text in self._cache:
-            self._cache.move_to_end(text)
+        key = text.strip()
+        if key in self._cache:
+            self._cache.move_to_end(key)
             self._hits += 1
-            cached = self._cache[text]
+            cached = self._cache[key]
             return PredictionResult(
                 label=cached.label,
                 confidence=cached.confidence,
@@ -99,9 +103,10 @@ class QueryClassifier:
     def _put_in_cache(self, text: str, result: PredictionResult) -> None:
         if not self.cache_size:
             return
-        if text in self._cache:
-            self._cache.move_to_end(text)
-        self._cache[text] = result
+        key = text.strip()
+        if key in self._cache:
+            self._cache.move_to_end(key)
+        self._cache[key] = result
         if len(self._cache) > self.cache_size:
             self._cache.popitem(last=False)
 
