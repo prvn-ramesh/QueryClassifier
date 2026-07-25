@@ -74,13 +74,22 @@ class ONNXClassifierEngine:
         model_path: Optional[Union[str, Path]] = None,
         hf_repo: Optional[str] = None,
         providers: Optional[List[str]] = None,
+        intra_op_num_threads: Optional[int] = None,
+        inter_op_num_threads: Optional[int] = None,
     ):
         model_file, tok_file, cfg_file = resolve_model_files(model_path=model_path, hf_repo=hf_repo)
 
         self.tokenizer = Tokenizer.from_file(str(tok_file))
 
         providers = providers or ["CPUExecutionProvider"]
-        self.session = ort.InferenceSession(str(model_file), providers=providers)
+        
+        opts = ort.SessionOptions()
+        if intra_op_num_threads is not None and intra_op_num_threads > 0:
+            opts.intra_op_num_threads = intra_op_num_threads
+        if inter_op_num_threads is not None and inter_op_num_threads > 0:
+            opts.inter_op_num_threads = inter_op_num_threads
+
+        self.session = ort.InferenceSession(str(model_file), sess_options=opts, providers=providers)
 
         # Inspect ONNX input requirement names
         self.input_names = [inp.name for inp in self.session.get_inputs()]

@@ -41,10 +41,14 @@ QUERY_CLASSIFIER_MODEL_PATH=
 ## 🐍 Python API Usage
 
 ```python
+import asyncio
 from query_classifier import QueryClassifier
 
-# Initializes model using Hugging Face Hub (prvn-ramesh/query-classifier-onnx) or .env configuration
-classifier = QueryClassifier()
+# Initializes classifier with built-in LRU cache and CPU thread tuning
+classifier = QueryClassifier(
+    cache_size=1000,             # Max items in LRU query cache (default: 1000)
+    intra_op_num_threads=4,      # Intra-node CPU parallelism
+)
 
 # 1. Single query prediction
 result = classifier.predict("Can you summarize this document?")
@@ -64,6 +68,17 @@ queries = [
 batch_results = classifier.predict_batch(queries)
 for q, res in zip(queries, batch_results):
     print(f"[{res.label.upper()}] ({res.latency_ms:.1f}ms) -> {q}")
+
+# 3. Async prediction (for FastAPI / AsyncIO frameworks)
+async def main():
+    async_res = await classifier.predict_async("Explain quantum computing")
+    print(f"Async prediction: {async_res.label} ({async_res.confidence:.2f})")
+
+asyncio.run(main())
+
+# 4. Cache statistics & management
+print(classifier.cache_info())  # e.g., {'hits': 1, 'misses': 4, 'maxsize': 1000, 'currsize': 4}
+classifier.clear_cache()
 ```
 
 ---
