@@ -16,6 +16,8 @@
 Try out QueryClassifier in your browser without installing anything:
 👉 **[query-classifier.vercel.app](https://query-classifier.vercel.app/)**
 
+![QueryClassifier Demo](assets/demo.gif)
+
 ---
 
 ## ⚡ Quickstart
