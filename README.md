@@ -37,18 +37,6 @@ The complete model fine-tuning and ONNX int8 quantization workflow is available 
 
 ---
 
-## ⚙️ Configuration (`.env`)
-
-Configure model paths dynamically in `.env` (refer to `.env.example`):
-
-```env
-# Hugging Face Repository ID (Default: prvn-ramesh/query-classifier-onnx)
-QUERY_CLASSIFIER_HF_REPO=prvn-ramesh/query-classifier-onnx
-
-# Optional local model directory override
-QUERY_CLASSIFIER_MODEL_PATH=
-```
-
 **Resolution Priority:**
 1. Explicit Python Argument (`hf_repo="..."` or `model_path="..."`)
 2. Environment Variable `QUERY_CLASSIFIER_HF_REPO`
