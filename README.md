@@ -1,8 +1,20 @@
-# QueryClassifier
+# ⚡ QueryClassifier
 
-**Goal:** A pip-installable Python library that classifies a text query into `low` / `medium` / `hard` complexity, for use as a pre-routing step in an LLM cascade (cheap model → medium model → frontier model).
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Playground-success?style=for-the-badge&logo=vercel)](https://query-classifier.vercel.app/)
+[![PyPI version](https://img.shields.io/pypi/v/queryclf?style=for-the-badge&color=blue)](https://pypi.org/project/queryclf/)
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ONNX%20Model-yellow?style=for-the-badge)](https://huggingface.co/prvn-ramesh/query-classifier-onnx)
 
-**Approach:** Fine-tuned `answerdotai/ModernBERT-large` quantized into int8 ONNX format (`query-classifier-onnx`). Uses a FastEmbed-inspired architecture powered by **pure ONNXRuntime + Rust `tokenizers`** — zero PyTorch, zero `transformers` library dependencies, and zero heavy GPU requirements.
+
+**Goal:** A high-speed, zero-heavy-dependency Python library (`queryclf`) that classifies user queries into `low`, `medium`, or `hard` complexity. Designed as an intelligent pre-routing engine for LLM cascades (e.g., routing simple queries to cheap models and complex queries to frontier models).
+
+**Approach:** Fine-tuned `answerdotai/ModernBERT-large` quantized into int8 ONNX format (`query-classifier-onnx`). Uses a FastEmbed-inspired architecture powered by **pure ONNXRuntime + Rust `tokenizers`** — zero PyTorch, zero `transformers` library runtime dependencies, and sub-100ms CPU latency.
+
+---
+
+## 🌐 Interactive Playground
+
+Try out QueryClassifier in your browser without installing anything:
+👉 **[query-classifier.vercel.app](https://query-classifier.vercel.app/)**
 
 ---
 
@@ -15,6 +27,13 @@ pip install queryclf
 ```
 
 Dependencies installed are lightweight (~38MB total): `onnxruntime`, `tokenizers`, `numpy`, `huggingface-hub`, and `python-dotenv`.
+
+---
+
+## 📓 Fine-Tuning Notebook
+
+The complete model fine-tuning and ONNX int8 quantization workflow is available as a Jupyter Notebook:
+- **Notebook File:** [`notebooks/query_classifier_training.ipynb`](notebooks/query_classifier_training.ipynb)
 
 ---
 
@@ -125,10 +144,3 @@ The underlying model [`prvn-ramesh/query-classifier-onnx`](https://huggingface.c
 | **Throughput** | **12.3 queries/sec** |
 
 ---
-
-## 🛠️ Project Roadmap Status
-
-- [x] **Phase 0 — Environment & Scaffold**: Package directory layout (`src/query_classifier`, `tests/`, `pyproject.toml`).
-- [x] **Phase 2 — Labeled Dataset**: `dataset.csv` with query samples.
-- [x] **Phase 4 & 5 — Fine-Tuned ModernBERT & ONNX int8 Quantization**: Quantized model published on Hugging Face at [`prvn-ramesh/query-classifier-onnx`](https://huggingface.co/prvn-ramesh/query-classifier-onnx).
-- [x] **Phase 6 — Inference Engine**: Pure ONNXRuntime + Tokenizers inference engine (`onnx_engine.py`, `classifier.py`, `cli.py`).
