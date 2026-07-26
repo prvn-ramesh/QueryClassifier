@@ -3,7 +3,7 @@
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Playground-success?style=for-the-badge&logo=vercel)](https://query-classifier.vercel.app/)
 [![PyPI version](https://img.shields.io/pypi/v/queryclf?style=for-the-badge&color=blue)](https://pypi.org/project/queryclf/)
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ONNX%20Model-yellow?style=for-the-badge)](https://huggingface.co/prvn-ramesh/query-classifier-onnx)
-
+[![Open In Colab](https://img.shields.io/badge/Google%20Colab-Fine--Tuning%20Notebook-F9AB00?style=for-the-badge&logo=googlecolab)](https://colab.research.google.com/github/prvn-ramesh/QueryClassifier/blob/main/notebooks/query_classifier_training.ipynb)
 
 **Goal:** A high-speed, zero-heavy-dependency Python library (`queryclf`) that classifies user queries into `low`, `medium`, or `hard` complexity. Designed as an intelligent pre-routing engine for LLM cascades (e.g., routing simple queries to cheap models and complex queries to frontier models).
 
@@ -34,6 +34,7 @@ Dependencies installed are lightweight (~38MB total): `onnxruntime`, `tokenizers
 
 The complete model fine-tuning and ONNX int8 quantization workflow is available as a Jupyter Notebook:
 - **Notebook File:** [`notebooks/query_classifier_training.ipynb`](notebooks/query_classifier_training.ipynb)
+- **Open Directly in Colab:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/prvn-ramesh/QueryClassifier/blob/main/notebooks/query_classifier_training.ipynb)
 
 ---
 
